@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarAI - Workshop Kolaborasi BekasiDev & Meetap</title>
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            950: '#030712',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Alpine.js CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        .glow-blob {
+            filter: blur(120px);
+            opacity: 0.15;
+            mix-blend-mode: plus-lighter;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .glass-nav {
+            background: rgba(3, 7, 18, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased relative overflow-x-hidden min-h-screen">
+
+    <!-- Ambient Background Lighting -->
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full bg-indigo-600 glow-blob pointer-events-none"></div>
+    <div class="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full bg-violet-600 glow-blob pointer-events-none"></div>
+    <div class="absolute bottom-10 left-10 w-[450px] h-[450px] rounded-full bg-emerald-600 glow-blob pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300" x-data="{ mobileOpen: false }">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            
+            <!-- Collaborative Brand Logo -->
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1.5 font-heading font-black text-xl tracking-tight text-white">
+                    <span class="text-indigo-500">Bekasi</span>Dev
+                    <span class="text-slate-500 text-sm font-normal mx-1">x</span>
+                    <span class="text-emerald-500 font-bold">Meet</span>ap
+                </div>
+            </div>
+
+            <!-- Navigation Menu (Desktop) -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+                <a href="#about" class="hover:text-white transition-colors duration-200">Tentang Kami</a>
+                <a href="#features" class="hover:text-white transition-colors duration-200">Fitur Aplikasi</a>
+                <a href="#curriculum" class="hover:text-white transition-colors duration-200">Kurikulum</a>
+                <a href="#faq" class="hover:text-white transition-colors duration-200">FAQ</a>
+            </div>
+
+            <!-- CTA Buttons (Desktop) -->
+            <!-- <div class="hidden md:flex items-center gap-4">
+                <a href="#register" class="text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-200 px-4 py-2">Masuk</a>
+                <a href="#register" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold rounded-xl px-5 py-2.5 shadow-lg shadow-indigo-600/20 transition-all duration-300 hover:-translate-y-0.5">
+                    Daftar Sekarang
+                </a>
+            </div> -->
+
+            <!-- Mobile Menu Burger Button -->
+            <button @click="mobileOpen = !mobileOpen" class="md:hidden text-slate-400 hover:text-white focus:outline-none">
+                <i x-show="!mobileOpen" data-lucide="menu" class="h-6 w-6"></i>
+                <i x-show="mobileOpen" data-lucide="x" class="h-6 w-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div x-show="mobileOpen" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-4"
+             class="md:hidden border-t border-slate-900 bg-slate-950/95 px-6 py-6 space-y-4 shadow-xl">
+            <a href="#about" @click="mobileOpen = false" class="block text-slate-300 hover:text-white font-medium">Tentang Kami</a>
+            <a href="#features" @click="mobileOpen = false" class="block text-slate-300 hover:text-white font-medium">Fitur Aplikasi</a>
+            <a href="#curriculum" @click="mobileOpen = false" class="block text-slate-300 hover:text-white font-medium">Kurikulum</a>
+            <a href="#faq" @click="mobileOpen = false" class="block text-slate-300 hover:text-white font-medium">FAQ</a>
+            
+            <div class="pt-4 border-t border-slate-900 flex flex-col gap-2">
+                <a href="#register" @click="mobileOpen = false" class="w-full text-center py-2.5 rounded-xl text-slate-300 border border-slate-800 hover:bg-slate-900 font-semibold transition-colors duration-200">Masuk</a>
+                <a href="#register" @click="mobileOpen = false" class="w-full text-center py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-lg shadow-indigo-600/20 transition-all duration-300">Daftar Sekarang</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="pt-40 pb-24 px-6 max-w-7xl mx-auto grid lg:grid-cols-12 gap-16 items-center">
+        <!-- Hero Left / Typography -->
+        <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+            
+            <!-- Collaborative Badge -->
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-indigo-950/40 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-wider">
+                <i data-lucide="sparkles" class="h-4 w-4 text-indigo-400"></i> Kolaborasi Komunitas Developer
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl font-extrabold font-heading text-white leading-tight tracking-tight">
+                Membangun Asisten Skripsi Cerdas dengan <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-emerald-400">Laravel 13 AI</span>
+            </h1>
+            
+            <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+                Tingkatkan skill coding Anda dari developer CRUD biasa menjadi <strong class="text-white font-semibold">AI-Native Engineer</strong>. Workshop intensif hasil kolaborasi komunitas IT lokal untuk melahirkan developer masa depan.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <a href="#register" class="w-full sm:w-auto text-center px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    Ikuti Workshop <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                </a>
+                <a href="#curriculum" class="w-full sm:w-auto text-center px-8 py-4 rounded-2xl border border-slate-800 hover:bg-slate-900 text-slate-300 transition-colors duration-200">
+                    Lihat Kurikulum
+                </a>
+            </div>
+
+            <!-- Meta Badges Info -->
+            <div class="grid grid-cols-3 gap-6 pt-6 border-t border-slate-900 max-w-md mx-auto lg:mx-0">
+                <div class="flex items-center gap-2.5 text-left">
+                    <div class="p-2 rounded-xl bg-indigo-600/10 text-indigo-400">
+                        <i data-lucide="users" class="h-5 w-5 shrink-0"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Komunitas</div>
+                        <div class="text-xs font-semibold text-white">BekasiDev</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5 text-left">
+                    <div class="p-2 rounded-xl bg-emerald-600/10 text-emerald-400">
+                        <i data-lucide="code" class="h-5 w-5 shrink-0"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Komunitas</div>
+                        <div class="text-xs font-semibold text-white">Meetap</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5 text-left">
+                    <div class="p-2 rounded-xl bg-amber-600/10 text-amber-400">
+                        <i data-lucide="video" class="h-5 w-5 shrink-0"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Metode</div>
+                        <div class="text-xs font-semibold text-white">Online Video</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Right / Premium Mockup UI -->
+        <div class="lg:col-span-5 relative group">
+            <div class="absolute -inset-1.5 bg-gradient-to-r from-indigo-500 to-emerald-500 rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-30 transition duration-700"></div>
+            
+            <div class="relative bg-slate-900 border border-slate-800 rounded-[2rem] overflow-hidden shadow-2xl p-6 space-y-6">
+                <!-- Browser Header Decorator -->
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                    </div>
+                    <span class="text-[10px] text-slate-500 font-mono">ScholarAI Dashboard v1.3</span>
+                </div>
+                
+                <!-- Mockup Content -->
+                <div class="space-y-4">
+                    <!-- Title Bar -->
+                    <div class="h-10 bg-slate-800/40 rounded-xl border border-slate-800 flex items-center px-4 justify-between">
+                        <span class="text-xs text-slate-300 font-semibold truncate max-w-[200px]">Skripsi_Akhir_Revisi.pdf</span>
+                        <span class="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase font-extrabold tracking-wider">Processed</span>
+                    </div>
+                    
+                    <!-- Stats Section -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl text-center">
+                            <div class="text-[8px] uppercase tracking-wider text-slate-500 font-bold mb-1">Score</div>
+                            <div class="text-md font-black text-indigo-400 font-heading">94/100</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl text-center">
+                            <div class="text-[8px] uppercase tracking-wider text-slate-500 font-bold mb-1">RAG Chunks</div>
+                            <div class="text-md font-black text-emerald-400 font-heading">24 Chunks</div>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl text-center">
+                            <div class="text-[8px] uppercase tracking-wider text-slate-500 font-bold mb-1">Status</div>
+                            <div class="text-md font-black text-violet-400 font-heading">Ready</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Code/AI Output snippet -->
+                    <div class="space-y-2 pt-2">
+                        <div class="text-[11px] text-slate-400 font-bold flex items-center gap-1.5">
+                            <i data-lucide="bot" class="h-3.5 w-3.5 text-indigo-400"></i> Ulasan Mentor AI:
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl text-xs text-slate-300 leading-relaxed font-mono">
+                            <span class="text-rose-400 font-bold">[!] Inkonsistensi Bab 1 & 4</span><br>
+                            Rumusan masalah #2 (Bab 1) belum terjawab di sub-bab pembahasan hasil (Bab 4). Disarankan menambahkan detail analisis RAG di halaman 42.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Collaborator Info Section -->
+    <section id="about" class="py-24 bg-slate-900/30 border-y border-slate-900/50 px-6">
+        <div class="max-w-7xl mx-auto space-y-16">
+            <div class="text-center space-y-3">
+                <h2 class="text-xs font-bold text-indigo-500 uppercase tracking-widest">Kolaborator Utama</h2>
+                <h3 class="text-3xl font-black font-heading text-white">Sinergi Dua Komunitas Developer</h3>
+                <p class="text-slate-400 text-sm max-w-xl mx-auto">
+                    Membangun ruang belajar IT yang inklusif untuk mempercepat adaptasi teknologi masa depan.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- BekasiDev Card -->
+                <div class="glass-card p-8 rounded-3xl hover:border-slate-700 transition duration-300 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xl font-bold font-heading text-white flex items-center gap-2">
+                            <span class="h-6 w-1 bg-indigo-500 rounded"></span> BekasiDev
+                        </div>
+                        <div class="p-2 rounded-xl bg-indigo-600/10 text-indigo-400">
+                            <i data-lucide="terminal" class="h-5 w-5"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Komunitas developer asal Bekasi yang berfokus pada kolaborasi, mentoring pemrograman, dan pengenalan framework modern secara hands-on. BekasiDev aktif mengadakan pertemuan teknis secara luring maupun daring guna membangun ekosistem digital lokal yang solid.
+                    </p>
+                </div>
+                
+                <!-- Meetap Card -->
+                <div class="glass-card p-8 rounded-3xl hover:border-slate-700 transition duration-300 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="text-xl font-bold font-heading text-white flex items-center gap-2">
+                            <span class="h-6 w-1 bg-emerald-500 rounded"></span> Meetap
+                        </div>
+                        <div class="p-2 rounded-xl bg-emerald-600/10 text-emerald-400">
+                            <i data-lucide="network" class="h-5 w-5"></i>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Komunitas pengembang software dan kreator acara teknologi yang mendedikasikan wadah bertukar ilmu bagi developer di berbagai kota. Berkomitmen menghubungkan talenta teknologi dengan materi pembelajaran yang aplikatif dan sesuai perkembangan pasar global.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features Grid -->
+    <section id="features" class="py-24 px-6 max-w-7xl mx-auto space-y-16">
+        <div class="text-center max-w-2xl mx-auto space-y-4">
+            <h2 class="text-xs font-bold text-indigo-500 uppercase tracking-widest">Fitur Unggulan Proyek</h2>
+            <h3 class="text-3xl sm:text-4xl font-extrabold font-heading text-white">Apa Yang Akan Anda Bangun?</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+                Anda tidak hanya belajar teori, tapi juga membangun aplikasi utuh yang mengintegrasikan fitur asisten cerdas berbasis AI-Native:
+            </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Feature 1 -->
+            <div class="glass-card p-6 rounded-3xl hover:border-slate-800 transition duration-300 space-y-5">
+                <div class="h-12 w-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="file-text" class="h-6 w-6"></i>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-md text-white">PDF Parser & Chunking</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Ekstraksi teks file PDF draf skripsi secara asinkron lalu dipecah menjadi potongan paragraf terstruktur.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="glass-card p-6 rounded-3xl hover:border-slate-800 transition duration-300 space-y-5">
+                <div class="h-12 w-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                    <i data-lucide="shield-check" class="h-6 w-6"></i>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-md text-white">Logic & Reference Check</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Analisis alur logika antar bab skripsi secara kritis serta validasi kecocokan sitasi teks dengan Daftar Pustaka.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="glass-card p-6 rounded-3xl hover:border-slate-800 transition duration-300 space-y-5">
+                <div class="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                    <i data-lucide="brain-circuit" class="h-6 w-6"></i>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-md text-white">Simulasi Pertanyaan Sidang</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        AI memprediksi pertanyaan kritis yang potensial ditanyakan oleh dosen penguji sidang untuk melatih kesiapan mental.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="glass-card p-6 rounded-3xl hover:border-slate-800 transition duration-300 space-y-5">
+                <div class="h-12 w-12 rounded-2xl bg-violet-500/10 text-violet-400 flex items-center justify-center">
+                    <i data-lucide="zap" class="h-6 w-6"></i>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="font-bold text-md text-white">WebSockets Real-time</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Pemberitahuan instan tanpa refresh halaman saat pemrosesan analisis AI di background selesai menggunakan Laravel Reverb.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curriculum Roadmap Timeline -->
+    <section id="curriculum" class="py-24 bg-slate-900/10 border-t border-slate-900 px-6">
+        <div class="max-w-4xl mx-auto space-y-16">
+            <div class="text-center space-y-4">
+                <h2 class="text-xs font-bold text-indigo-500 uppercase tracking-widest">Roadmap Belajar</h2>
+                <h3 class="text-3xl font-black font-heading text-white">Silabus Lengkap & Terarah</h3>
+                <p class="text-slate-400 text-sm max-w-xl mx-auto">
+                    Dari inisialisasi framework hingga integrasi kecerdasan buatan kelas industri.
+                </p>
+            </div>
+
+            <!-- Timeline -->
+            <div class="relative border-l border-slate-800 ml-4 md:ml-32 space-y-8">
+                
+                <!-- Part 1 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 1</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Pendahuluan & Persiapan Proyek</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Instalasi Laravel 13, perkenalan fitur Native AI SDK, serta setup library PDF Parser.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 2</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Arsitektur Database & Model</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Perancangan ERD untuk theses, sections, dan AI feedback menggunakan kolom Vector Cast `AsVector`.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 3 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 3</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors"> UI & Laravel Breeze</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Setup Auth Breeze dengan Vue 3, Tailwind 4, dan kustomisasi Layout Sidebar menggunakan shadcn-vue.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 4 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 4</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">PDF Parsing & Background Job</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Logika ekstraksi teks PDF (`PdfService`) dan pembagian teks ke antrean secara background via Queue Job.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 5 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 5</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Membangun Mentor AI</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Membuat AI Agent (`ThesisChatAgent`), penanganan sesi diskusi terautentikasi, dan perenderan Markdown di Vue.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 6 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 6</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Queue Worker & Background AI</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Memproses pemicu analisis AI secara asinkron agar server tidak freeze menggunakan antrean database.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 7 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 7</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Logic Link & Reference Checker</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Melatih AI untuk memeriksa benang merah antar bab serta mencocokkan sitasi draf skripsi dengan bibliografi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 8 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 8</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Simulasi Pertanyaan Sidang</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Memanfaatkan LLM untuk memprediksi 3-5 pertanyaan tersulit saat sidang berdasarkan draf yang diunggah.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 9 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 9</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Dashboard Analisis Vue</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Menampilkan metrik Academic Score, ringkasan AI, dan daftar ulasan revisi terstruktur secara interaktif.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 10 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 10</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Interactive Chat with Thesis</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Implementasi ruang diskusi real-time di mana mahasiswa dapat mengajukan pertanyaan langsung terkait skripsi mereka.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 11 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 11</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Optimasi RAG & Vector Search</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Memanfaatkan Eloquent Vector Search (`nearestTo`) untuk menghemat token API dan meningkatkan akurasi jawaban obrolan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 12 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 12</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Manajemen User & Global Toast</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Membuat sistem CRUD untuk administrator pengguna serta integrasi pesan notifikasi melayang (Toast) via Inertia flash.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 13 -->
+                <div class="relative pl-8 md:pl-12 group">
+                    <span class="absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 border-slate-950 bg-indigo-500 group-hover:scale-125 transition-transform duration-300"></span>
+                    <div class="grid md:grid-cols-4 gap-4 items-start">
+                        <div class="md:col-span-1">
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block md:pt-1">Part 13</span>
+                        </div>
+                        <div class="md:col-span-3 space-y-1">
+                            <h4 class="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">Real-time WebSockets dengan Reverb</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Integrasi Laravel Reverb untuk mendorong pembaruan status pemrosesan skripsi dari server ke browser secara instan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 px-6 max-w-4xl mx-auto space-y-12" x-data="{ active: null }">
+        <div class="text-center space-y-4">
+            <h2 class="text-xs font-bold text-indigo-500 uppercase tracking-widest">FAQ</h2>
+            <h3 class="text-3xl font-black font-heading text-white">Pertanyaan yang Sering Diajukan</h3>
+        </div>
+
+        <div class="space-y-4">
+            
+            <!-- Question 1 -->
+            <div class="border border-slate-900 bg-slate-900/40 rounded-2xl overflow-hidden transition-all duration-300">
+                <button @click="active = active === 1 ? null : 1" class="w-full flex items-center justify-between p-6 text-left font-bold text-sm text-white hover:text-indigo-400 transition-colors">
+                    <span>Apakah workshop ini membutuhkan skill pemrograman tingkat lanjut?</span>
+                    <i data-lucide="chevron-down" :class="active === 1 ? 'rotate-180 text-indigo-400' : ''" class="h-5 w-5 text-slate-500 transition-transform duration-300"></i>
+                </button>
+                <div x-show="active === 1" x-collapse class="px-6 pb-6 text-xs text-slate-400 leading-relaxed border-t border-slate-950/60 pt-4">
+                    Tidak juga. Rekomendasi dasar adalah pemahaman pemrograman PHP dasar dan konsep OOP. Workshop ini menyediakan Part Khusus bagi pemula untuk mempelajari struktur MVC Laravel, relasi database, dan komponen dasar Vue 3 sebelum masuk ke coding AI SDK.
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="border border-slate-900 bg-slate-900/40 rounded-2xl overflow-hidden transition-all duration-300">
+                <button @click="active = active === 2 ? null : 2" class="w-full flex items-center justify-between p-6 text-left font-bold text-sm text-white hover:text-indigo-400 transition-colors">
+                    <span>Apakah tools dan LLM yang digunakan berbayar?</span>
+                    <i data-lucide="chevron-down" :class="active === 2 ? 'rotate-180 text-indigo-400' : ''" class="h-5 w-5 text-slate-500 transition-transform duration-300"></i>
+                </button>
+                <div x-show="active === 2" x-collapse class="px-6 pb-6 text-xs text-slate-400 leading-relaxed border-t border-slate-950/60 pt-4">
+                    Kita akan menggunakan API key gratis dari Gemini AI (Google AI Studio) yang menyediakan kuota gratis harian yang sangat cukup untuk masa development dan uji coba. Setup server Laravel Reverb juga 100% opensource dan dijalankan secara lokal di komputer Anda tanpa biaya tambahan.
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="border border-slate-900 bg-slate-900/40 rounded-2xl overflow-hidden transition-all duration-300">
+                <button @click="active = active === 3 ? null : 3" class="w-full flex items-center justify-between p-6 text-left font-bold text-sm text-white hover:text-indigo-400 transition-colors">
+                    <span>Apakah setelah workshop saya akan mendapatkan akses ke source code?</span>
+                    <i data-lucide="chevron-down" :class="active === 3 ? 'rotate-180 text-indigo-400' : ''" class="h-5 w-5 text-slate-500 transition-transform duration-300"></i>
+                </button>
+                <div x-show="active === 3" x-collapse class="px-6 pb-6 text-xs text-slate-400 leading-relaxed border-t border-slate-950/60 pt-4">
+                    Ya, seluruh peserta kolaborasi BekasiDev x Meetap akan diberikan akses repositori repositori GitHub lengkap berisi kode sumber per bab (Part 1 - Part 13) yang siap dideploy.
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 py-12 px-6 bg-slate-950">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-xs text-slate-500 text-center md:text-left">
+                &copy; 2026 <strong>BekasiDev</strong> &amp; <strong>Meetap</strong> Developer Community. All rights reserved.
+            </div>
+            <div class="flex gap-6 text-xs text-slate-500">
+                <a href="https://github.com/bekasidev" target="_blank" class="hover:text-indigo-400 transition-colors duration-150">GitHub BekasiDev</a>
+                <a href="https://github.com/meetap" target="_blank" class="hover:text-emerald-400 transition-colors duration-150">Meetap Community</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
